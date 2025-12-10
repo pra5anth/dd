@@ -39,8 +39,8 @@ EOF
         stage('Push to Docker Hub') {
             steps {
                 withCredentials([usernamePassword(
-                    credentialsId: 'dockerhub-cred',
-                    usernameVariable: 'DOCKER_USER',
+                    credentialsId: 'dockerhub-cred', 
+                    usernameVariable: 'DOCKER_USER', 
                     passwordVariable: 'DOCKER_PASS'
                 )]) {
                     sh """
@@ -54,11 +54,25 @@ EOF
 
         stage('Deploy Using Docker Compose') {
             steps {
-                sh """
-                    docker-compose down || true
-                    docker-compose pull
-                    docker-compose up -d
-                """
+                withCredentials([usernamePassword(
+                    credentialsId: 'dockerhub-cred',
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS'
+                )]) {
+                    sh """
+                        # Login to Docker Hub before pulling images
+                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                        
+                        # Stop any running containers (ignore error if none)
+                        docker-compose down || true
+                        
+                        # Pull the latest image
+                        docker-compose pull
+                        
+                        # Start containers in detached mode
+                        docker-compose up -d
+                    """
+                }
             }
         }
     }
