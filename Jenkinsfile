@@ -18,9 +18,7 @@ pipeline {
         stage('Install Dependencies & Run Tests') {
             steps {
                 sh '''
-                    python3 -m venv env
-                    . env/bin/activate
-                    pip install -r requirements.txt
+                    pip3 install -r requirements.txt
                     echo "Running tests..."
                     python - <<EOF
 print("Test Passed: App imported successfully")
