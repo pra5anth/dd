@@ -2,7 +2,7 @@ pipeline {
     agent any  
 
     environment {       
-        REGISTRY = "kiara123"   // Your DockerHub username
+        REGISTRY = "pra5anth"   // Your DockerHub username
         IMAGE_NAME = "myapp"
     }
 
@@ -10,7 +10,7 @@ pipeline {
         stage('Checkout Code') {
             steps {  
                 git branch: 'main',
-                    url: 'https://github.com/Kiaraintellipaat/dd.git'
+                    url: 'https://github.com/pra5anth/dd.git'
             }
         }
 
@@ -38,7 +38,7 @@ EOF
         stage('Push to Docker Hub') {
             steps {
                 withCredentials([usernamePassword(
-                    credentialsId: 'dockerhub-cred', 
+                    credentialsId: 'dhubb', 
                     usernameVariable: 'DOCKER_USER', 
                     passwordVariable: 'DOCKER_PASS'
                 )]) {
